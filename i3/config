@@ -203,3 +203,4 @@ client.focused_inactive #414868  #1f2335    #a9b1d6  #414868   #414868
 client.unfocused        #292e42  #16161e    #787c99  #292e42   #292e42
 client.urgent           #f7768e  #f7768e    #ffffff  #f7768e   #f7768e
 client.placeholder      #414868  #1f2335    #a9b1d6  #414868   #414868
+exec_always --no-startup-id feh --bg-fill ~/.dotfiles/wallpapers/kali-wallpaper.jpg
