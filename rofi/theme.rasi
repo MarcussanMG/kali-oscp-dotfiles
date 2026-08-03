@@ -1,0 +1,55 @@
+* {
+    bg:      #1e1e2e;
+    bg-alt:  #313244;
+    fg:      #cdd6f4;
+    blue:    #89b4fa;
+
+    font: "JetBrainsMono Nerd Font Mono 12";
+
+    background-color: @bg;
+    text-color: @fg;
+}
+
+window {
+    width: 650px;
+
+    border: 2px;
+    border-color: @blue;
+    border-radius: 12px;
+
+    padding: 18px;
+}
+
+mainbox {
+    spacing: 12px;
+}
+
+inputbar {
+    background-color: @bg-alt;
+    border-radius: 8px;
+    padding: 12px;
+}
+
+entry {
+    placeholder: "Search...";
+}
+
+listview {
+    lines: 10;
+    spacing: 8px;
+    scrollbar: false;
+}
+
+element {
+    border-radius: 8px;
+    padding: 10px;
+}
+
+element selected {
+    background-color: @blue;
+    text-color: #1e1e2e;
+}
+
+prompt {
+    text-color: @blue;
+}

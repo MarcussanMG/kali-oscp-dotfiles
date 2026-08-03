@@ -1,0 +1,3 @@
+[time]
+command=date '+%H:%M'
+interval=1
