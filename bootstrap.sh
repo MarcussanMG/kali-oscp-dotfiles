@@ -32,8 +32,8 @@ sudo apt install -y \
     git \
     curl \
     wget \
-    unzip
-
+    unzip \
+    eza
 "$HOME/.dotfiles/install.sh"
 
 echo

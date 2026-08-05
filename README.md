@@ -503,3 +503,66 @@ This environment intentionally avoids:
 - Unnecessary background services
 
 Every component should improve speed, stability, or usability during penetration-testing work.
+
+---
+
+## tmux Pane Titles
+
+Each tmux pane can display a custom title in its upper border. This is useful for identifying terminals used for tasks such as:
+
+- Nmap scans
+- Web enumeration
+- Reverse shells
+- Listeners
+- File transfers
+- Local servers
+
+Pane titles are displayed using:
+
+```tmux
+set-option -g pane-border-status top
+set-option -g pane-border-format " #{pane_title} "
+```
+
+### Rename the Current Pane
+
+Press:
+
+```text
+Ctrl + A, then T
+```
+
+Enter a title such as:
+
+```text
+Nmap
+Listener
+Web Enum
+Reverse Shell
+HTTP Server
+```
+
+Then press `Enter`.
+
+The configured binding is:
+
+```tmux
+bind-key t command-prompt -p "Pane title:" "select-pane -T '%%'"
+```
+
+A pane can also be renamed directly from the terminal:
+
+```bash
+tmux select-pane -T "Nmap"
+```
+
+The title is displayed when the tmux window contains multiple panes.
+
+Example layout:
+
+```text
+ Nmap                              Listener
+────────────────────────────────────────────
+ nmap -sC -sV target              nc -lvnp 4444
+```
+
