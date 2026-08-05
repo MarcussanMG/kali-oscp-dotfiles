@@ -295,9 +295,10 @@ eval "$(zoxide init zsh)"
 # Aliases
 ############################
 
-alias ll='ls -lah --color=auto'
-alias la='ls -A'
-
+alias ls='eza --icons'
+alias ll='eza -lah --icons'
+alias la='eza -a --icons'
+alias tree='eza --tree --icons'
 alias cls='clear'
 
 alias cat='batcat --paging=never'
