@@ -4,34 +4,25 @@ set -euo pipefail
 
 WALLPAPER="$HOME/.dotfiles/wallpapers/kali-wallpaper.jpg"
 LOCK_IMAGE="$HOME/.cache/i3lock/blurred.png"
+RESOLUTION="$(xdpyinfo | awk '/dimensions/{print $2; exit}')"
 
 mkdir -p "$(dirname "$LOCK_IMAGE")"
+
+if [[ ! -f "$WALLPAPER" ]]; then
+    echo "Wallpaper not found: $WALLPAPER" >&2
+    exit 1
+fi
 
 if [[ ! -f "$LOCK_IMAGE" ]]; then
     echo "Generating blurred lock-screen image..."
 
-    RESOLUTION="$(xdpyinfo | awk '/dimensions/{print $2; exit}')"
-
-    if command -v magick >/dev/null 2>&1; then
-        magick "$WALLPAPER" \
-            -resize "${RESOLUTION}^" \
-            -gravity center \
-            -extent "$RESOLUTION" \
-            -blur 0x12 \
-            -modulate 80 \
-            "$LOCK_IMAGE"
-    elif command -v convert >/dev/null 2>&1; then
-        convert "$WALLPAPER" \
-            -resize "${RESOLUTION}^" \
-            -gravity center \
-            -extent "$RESOLUTION" \
-            -blur 0x12 \
-            -modulate 80 \
-            "$LOCK_IMAGE"
-    else
-        echo "ImageMagick is not installed." >&2
-        exit 1
-    fi
+    convert "$WALLPAPER" \
+        -resize "${RESOLUTION}^" \
+        -gravity center \
+        -extent "$RESOLUTION" \
+        -blur 0x12 \
+        -modulate 80 \
+        "$LOCK_IMAGE"
 fi
 
 exec /usr/bin/i3lock -n -i "$LOCK_IMAGE"
