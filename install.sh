@@ -44,3 +44,32 @@ done
 
 echo
 echo "Dotfiles installed successfully."
+
+# Configure blurred lock screen
+echo "[*] Configuring lock screen..."
+
+chmod +x "$HOME/.dotfiles/bin/lockscreen"
+
+WALLPAPER="$HOME/.dotfiles/wallpapers/kali-wallpaper.jpg"
+LOCK_IMAGE="$HOME/.cache/i3lock/blurred.png"
+
+if command -v magick >/dev/null 2>&1 && command -v xdpyinfo >/dev/null 2>&1; then
+    if [[ -n "${DISPLAY:-}" && -f "$WALLPAPER" ]]; then
+        RESOLUTION="$(xdpyinfo | awk '/dimensions/{print $2; exit}')"
+        mkdir -p "$(dirname "$LOCK_IMAGE")"
+
+        magick "$WALLPAPER" \
+            -resize "${RESOLUTION}^" \
+            -gravity center \
+            -extent "$RESOLUTION" \
+            -blur 0x12 \
+            -modulate 80 \
+            "$LOCK_IMAGE"
+
+        echo "[+] Blurred lock-screen image created."
+    else
+        echo "[!] No graphical display detected. The image will be generated on first lock."
+    fi
+else
+    echo "[!] ImageMagick or xdpyinfo is missing. The image will be generated after dependencies are installed."
+fi

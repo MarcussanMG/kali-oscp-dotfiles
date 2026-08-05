@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+WALLPAPER="$HOME/.dotfiles/wallpapers/kali-wallpaper.jpg"
+LOCK_IMAGE="$HOME/.cache/i3lock/blurred.png"
+
+if [[ ! -f "$LOCK_IMAGE" ]]; then
+    echo "Generating blurred lock-screen image..."
+
+    command -v magick >/dev/null 2>&1 || {
+        echo "ImageMagick is not installed. Run: sudo apt install imagemagick" >&2
+        exit 1
+    }
+
+    RESOLUTION="$(xdpyinfo | awk '/dimensions/{print $2; exit}')"
+    mkdir -p "$(dirname "$LOCK_IMAGE")"
+
+    magick "$WALLPAPER" \
+        -resize "${RESOLUTION}^" \
+        -gravity center \
+        -extent "$RESOLUTION" \
+        -blur 0x12 \
+        -modulate 80 \
+        "$LOCK_IMAGE"
+fi
+
+exec i3lock -i "$LOCK_IMAGE"

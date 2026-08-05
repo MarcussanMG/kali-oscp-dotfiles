@@ -4,7 +4,7 @@ set -euo pipefail
 
 sudo apt update
 
-sudo apt install -y \
+sudo apt install -y \ imagemagick x11-utils i3lock
     i3 \
     i3status \
     i3blocks \
