@@ -342,5 +342,13 @@ mkt() {
 # ═══════════════════════════════════════════════════════════════════════
 
 if command -v tmux >/dev/null && [[ -z "$TMUX" ]] && [[ -n "$PS1" ]]; then
-    tmux attach-session -t main 2>/dev/null || tmux new-session -s main
+    if tmux has-session -t main 2>/dev/null; then
+        if [[ -z "$(tmux list-clients -t main 2>/dev/null)" ]]; then
+            tmux attach-session -t main
+        else
+            tmux new-session
+        fi
+    else
+        tmux new-session -s main
+    fi
 fi
