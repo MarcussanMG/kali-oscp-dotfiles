@@ -1,8 +1,0 @@
-*.bak
-*.backup.*
-*.swp
-*.tmp
-*.log
-.DS_Store
-.zsh_history
-history

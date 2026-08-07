@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+set -uo pipefail
+
+command -v pactl >/dev/null 2>&1 || exit 0
+
+muted=$(pactl get-sink-mute @DEFAULT_SINK@ 2>/dev/null | awk '{print $2}')
+level=$(pactl get-sink-volume @DEFAULT_SINK@ 2>/dev/null | awk 'NR==1{print $5}' | tr -d '%')
+[[ -n "${level:-}" ]] || exit 0
+
+if [[ "$muted" == "yes" ]]; then
+    printf '<span foreground="#4b5e54">  muted</span>\n'
+else
+    if   (( level >= 66 )); then icon=""
+    elif (( level >= 33 )); then icon=""
+    else                         icon=""
+    fi
+    printf '<span foreground="#166534">%s</span> <span foreground="#86efac">%d%%</span>\n' "$icon" "$level"
+fi

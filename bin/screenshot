@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+# Region screenshot for report evidence. Saves to ~/screenshots and copies
+# the image to the clipboard. Bound to Super+Shift+S.
+set -uo pipefail
+
+dir="$HOME/screenshots"
+mkdir -p "$dir"
+file="$dir/$(date '+%Y-%m-%d_%H-%M-%S').png"
+
+if command -v flameshot >/dev/null 2>&1; then
+    flameshot gui --path "$file"
+elif command -v maim >/dev/null 2>&1; then
+    maim --select --hidecursor "$file" || exit 0
+    command -v xclip >/dev/null 2>&1 && \
+        xclip -selection clipboard -t image/png -i "$file"
+elif command -v scrot >/dev/null 2>&1; then
+    scrot --select "$file" || exit 0
+    command -v xclip >/dev/null 2>&1 && \
+        xclip -selection clipboard -t image/png -i "$file"
+else
+    notify-send "screenshot" "Install maim or flameshot" 2>/dev/null
+    exit 1
+fi
+
+[[ -f "$file" ]] && notify-send -u low "screenshot" "${file/#$HOME/~}" 2>/dev/null

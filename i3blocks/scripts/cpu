@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+set -uo pipefail
+
+sample() { awk '/^cpu /{print $2+$3+$4+$5+$6+$7+$8, $5}' /proc/stat; }
+
+read -r total_a idle_a < <(sample)
+sleep 0.4
+read -r total_b idle_b < <(sample)
+
+delta=$(( total_b - total_a ))
+(( delta > 0 )) || { printf '<span foreground="#4b5e54"> --</span>\n'; exit 0; }
+
+usage=$(( (100 * (delta - (idle_b - idle_a))) / delta ))
+
+if   (( usage >= 90 )); then colour="#f87171"
+elif (( usage >= 60 )); then colour="#fbbf24"
+else                         colour="#86efac"
+fi
+
+printf '<span foreground="#166534"></span> <span foreground="%s">%d%%</span>\n' "$colour" "$usage"

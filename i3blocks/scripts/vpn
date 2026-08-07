@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# tun0 address — the one you paste into reverse shells.
+set -uo pipefail
+
+ip=$(ip -4 -brief address show tun0 2>/dev/null | awk '{print $3}' | cut -d/ -f1)
+
+if [[ -n "$ip" ]]; then
+    printf '<span foreground="#166534"></span> <span foreground="#4ade80"><b>%s</b></span>\n' "$ip"
+else
+    printf '<span foreground="#4b5e54">  vpn down</span>\n'
+fi

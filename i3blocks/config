@@ -1,3 +1,36 @@
-[time]
-command=date '+%H:%M'
+# ═══════════════════════════════════════════════════════════════════════
+#  i3blocks — nightgrid
+#  Blocks live in ~/.config/i3blocks/scripts/ and are named after $BLOCK_NAME.
+# ═══════════════════════════════════════════════════════════════════════
+
+command=$HOME/.config/i3blocks/scripts/$BLOCK_NAME
+markup=pango
+separator=false
+separator_block_width=16
+
+# Current engagement target. Hidden until you set one with Super+Shift+T
+# or the `target` shell function. Refreshes instantly on SIGRTMIN+11.
+[target]
+interval=30
+signal=11
+
+# VPN tunnel address (tun0). The number that matters during the exam.
+[vpn]
+interval=5
+
+# Local address of the primary interface.
+[net]
+interval=10
+
+[cpu]
+interval=5
+
+[mem]
+interval=5
+
+[volume]
+interval=once
+signal=10
+
+[clock]
 interval=1

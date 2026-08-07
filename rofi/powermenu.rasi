@@ -1,0 +1,70 @@
+/* ═══════════════════════════════════════════════════════════════════
+   rofi power menu — nightgrid, four icons in a row
+   ═══════════════════════════════════════════════════════════════════ */
+
+* {
+    bg:        #05070aF2;
+    bg-panel:  #0d1410;
+    bg-sel:    #133320;
+    green:     #22c55e;
+    green-hi:  #4ade80;
+    green-dim: #166534;
+    fg:        #d1fae5;
+    gray:      #4b5e54;
+    red:       #f87171;
+
+    background-color: transparent;
+    text-color:       @fg;
+}
+
+window {
+    transparency:     "real";
+    background-color: @bg;
+    border:           1px;
+    border-color:     @green-dim;
+    border-radius:    18px;
+    padding:          26px;
+    width:            520px;
+    location:         center;
+    anchor:           center;
+    children:         [ mainbox ];
+}
+
+mainbox {
+    children: [ listview ];
+}
+
+listview {
+    columns:   4;
+    lines:     1;
+    spacing:   16px;
+    cycle:     true;
+    scrollbar: false;
+}
+
+element {
+    background-color: @bg-panel;
+    border:           1px;
+    border-color:     @bg-panel;
+    border-radius:    14px;
+    padding:          26px 0px;
+    cursor:           pointer;
+    children:         [ element-text ];
+}
+
+element-text {
+    font:             "JetBrainsMono Nerd Font 26";
+    horizontal-align: 0.5;
+    vertical-align:   0.5;
+    text-color:       @gray;
+    background-color: transparent;
+}
+
+element selected {
+    background-color: @bg-sel;
+    border-color:     @green;
+}
+
+element selected element-text {
+    text-color: @green-hi;
+}

@@ -1,28 +1,34 @@
 #!/usr/bin/env bash
-
+# i3lock with a blurred nightgrid wallpaper and matching ring colours.
 set -euo pipefail
 
-WALLPAPER="$HOME/.dotfiles/wallpapers/kali-wallpaper.jpg"
-LOCK_IMAGE="$HOME/.cache/i3lock/blurred.png"
-RESOLUTION="$(xdpyinfo | awk '/dimensions/{print $2; exit}')"
+WALLPAPER="${WALLPAPER:-$HOME/.dotfiles/wallpapers/nightgrid.png}"
+CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/i3lock"
+LOCK_IMAGE="$CACHE_DIR/blurred.png"
 
-mkdir -p "$(dirname "$LOCK_IMAGE")"
+mkdir -p "$CACHE_DIR"
 
 if [[ ! -f "$WALLPAPER" ]]; then
     echo "Wallpaper not found: $WALLPAPER" >&2
-    exit 1
+    exec /usr/bin/i3lock -n -c 05070a
 fi
 
-if [[ ! -f "$LOCK_IMAGE" ]]; then
-    echo "Generating blurred lock-screen image..."
-
-    convert "$WALLPAPER" \
-        -resize "${RESOLUTION}^" \
+# Regenerate only when the wallpaper is newer than the cached blur.
+if [[ ! -f "$LOCK_IMAGE" || "$WALLPAPER" -nt "$LOCK_IMAGE" ]]; then
+    resolution="$(xdpyinfo | awk '/dimensions/{print $2; exit}')"
+    magick=$(command -v magick || command -v convert) || {
+        echo "ImageMagick not installed" >&2
+        exec /usr/bin/i3lock -n -c 05070a
+    }
+    "$magick" "$WALLPAPER" \
+        -resize "${resolution}^" \
         -gravity center \
-        -extent "$RESOLUTION" \
-        -blur 0x12 \
-        -modulate 80 \
+        -extent "$resolution" \
+        -blur 0x14 \
+        -modulate 70 \
         "$LOCK_IMAGE"
 fi
 
-exec /usr/bin/i3lock -n -i "$LOCK_IMAGE"
+exec /usr/bin/i3lock -n -i "$LOCK_IMAGE" \
+    --ignore-empty-password \
+    --show-failed-attempts

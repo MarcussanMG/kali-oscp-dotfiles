@@ -1,55 +1,127 @@
+/* ═══════════════════════════════════════════════════════════════════
+   rofi — nightgrid
+   ═══════════════════════════════════════════════════════════════════ */
+
 * {
-    bg:      #1e1e2e;
-    bg-alt:  #313244;
-    fg:      #cdd6f4;
-    blue:    #89b4fa;
+    bg:        #05070aF2;
+    bg-soft:   #090e0c;
+    bg-panel:  #0d1410;
+    bg-sel:    #133320;
+    green:     #22c55e;
+    green-hi:  #4ade80;
+    green-dim: #166534;
+    fg:        #d1fae5;
+    fg-dim:    #86efac;
+    gray:      #4b5e54;
+    urgent:    #f87171;
 
     font: "JetBrainsMono Nerd Font Mono 12";
 
-    background-color: @bg;
-    text-color: @fg;
+    background-color: transparent;
+    text-color:       @fg;
 }
 
 window {
-    width: 650px;
-
-    border: 2px;
-    border-color: @blue;
-    border-radius: 12px;
-
-    padding: 18px;
+    transparency:     "real";
+    background-color: @bg;
+    border:           1px;
+    border-color:     @green-dim;
+    border-radius:    14px;
+    width:            680px;
+    padding:          16px;
+    location:         center;
+    anchor:           center;
+    children:         [ mainbox ];
 }
 
 mainbox {
-    spacing: 12px;
+    spacing:  14px;
+    children: [ inputbar, message, listview ];
 }
 
 inputbar {
-    background-color: @bg-alt;
-    border-radius: 8px;
-    padding: 12px;
-}
-
-entry {
-    placeholder: "Search...";
-}
-
-listview {
-    lines: 10;
-    spacing: 8px;
-    scrollbar: false;
-}
-
-element {
-    border-radius: 8px;
-    padding: 10px;
-}
-
-element selected {
-    background-color: @blue;
-    text-color: #1e1e2e;
+    background-color: @bg-panel;
+    border:           1px;
+    border-color:     @green-dim;
+    border-radius:    10px;
+    padding:          12px 14px;
+    spacing:          10px;
+    children:         [ prompt, entry ];
 }
 
 prompt {
-    text-color: @blue;
+    text-color:  @green;
+    font:        "JetBrainsMono Nerd Font Mono 12";
+    vertical-align: 0.5;
+}
+
+entry {
+    placeholder:       "search";
+    placeholder-color: @gray;
+    cursor:            text;
+    vertical-align:    0.5;
+}
+
+message {
+    background-color: @bg-panel;
+    border-radius:    10px;
+    padding:          10px;
+}
+
+textbox {
+    text-color: @fg-dim;
+}
+
+listview {
+    lines:        9;
+    spacing:      4px;
+    scrollbar:    false;
+    fixed-height: false;
+    dynamic:      true;
+    cycle:        true;
+}
+
+element {
+    border-radius: 10px;
+    padding:       10px 12px;
+    spacing:       12px;
+    cursor:        pointer;
+}
+
+element normal normal   { text-color: @fg; }
+element normal urgent   { text-color: @urgent; }
+element normal active   { text-color: @green-hi; }
+
+element alternate normal { text-color: @fg; }
+element alternate urgent  { text-color: @urgent; }
+element alternate active  { text-color: @green-hi; }
+
+element selected normal {
+    background-color: @bg-sel;
+    text-color:       @green-hi;
+    border:           0 0 0 3px;
+    border-color:     @green;
+    border-radius:    10px;
+}
+
+element selected urgent {
+    background-color: @urgent;
+    text-color:       #05070a;
+}
+
+element selected active {
+    background-color: @bg-sel;
+    text-color:       @green-hi;
+}
+
+element-icon {
+    size:             1.25em;
+    vertical-align:   0.5;
+    background-color: transparent;
+}
+
+element-text {
+    vertical-align:   0.5;
+    background-color: transparent;
+    text-color:       inherit;
 }

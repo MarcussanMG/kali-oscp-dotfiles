@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# Prompt for the engagement target shown in the bar. Bound to Super+Shift+T.
+set -uo pipefail
+
+file="${XDG_CACHE_HOME:-$HOME/.cache}/oscp-target"
+current=$(cat "$file" 2>/dev/null)
+
+value=$(rofi -dmenu -p " target" -theme "$HOME/.config/rofi/theme.rasi" \
+    -lines 0 -filter "$current" < /dev/null) || exit 0
+
+mkdir -p "$(dirname "$file")"
+printf '%s\n' "${value// /}" > "$file"
+pkill -RTMIN+11 i3blocks 2>/dev/null
+exit 0

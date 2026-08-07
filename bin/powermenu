@@ -1,18 +1,16 @@
 #!/usr/bin/env bash
+# Rofi power menu — nightgrid.
+set -uo pipefail
 
-chosen=$(printf "⏻ Shutdown\n Reboot\n Logout\n Lock" | rofi -dmenu -i -p "Power")
+theme="$HOME/.config/rofi/powermenu.rasi"
+
+chosen=$(printf '\n\n󰗽\n' \
+    | rofi -dmenu -i -theme "$theme" -p "" -no-custom -format i)
 
 case "$chosen" in
-    "⏻ Shutdown")
-        systemctl poweroff
-        ;;
-    " Reboot")
-        systemctl reboot
-        ;;
-    " Logout")
-        i3-msg exit
-        ;;
-    " Lock")
-        i3lock
-        ;;
+    0) systemctl poweroff ;;
+    1) systemctl reboot ;;
+    2) i3-msg exit ;;
+    3) exec "$HOME/.local/bin/lockscreen" ;;
+    *) exit 0 ;;
 esac

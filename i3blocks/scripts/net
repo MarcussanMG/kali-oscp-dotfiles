@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# Address of the first physical interface that is up.
+set -uo pipefail
+
+read -r iface addr < <(
+    ip -4 -brief address show up 2>/dev/null \
+        | awk '$1 !~ /^(lo|tun|docker|br-|veth)/ && $3 != "" {print $1, $3; exit}'
+)
+
+if [[ -n "${addr:-}" ]]; then
+    printf '<span foreground="#166534">󰈀</span> <span foreground="#86efac">%s</span>\n' "${addr%%/*}"
+else
+    printf '<span foreground="#4b5e54">󰈀 offline</span>\n'
+fi

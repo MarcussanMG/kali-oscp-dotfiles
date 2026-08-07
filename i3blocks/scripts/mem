@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+set -uo pipefail
+
+read -r used total < <(free -m | awk '/^Mem:/ {print $3, $2}')
+(( total > 0 )) || exit 0
+
+pct=$(( used * 100 / total ))
+
+if   (( pct >= 90 )); then colour="#f87171"
+elif (( pct >= 75 )); then colour="#fbbf24"
+else                       colour="#86efac"
+fi
+
+printf '<span foreground="#166534"></span> <span foreground="%s">%s</span>\n' \
+    "$colour" "$(awk -v u="$used" 'BEGIN{printf "%.1fG", u/1024}')"

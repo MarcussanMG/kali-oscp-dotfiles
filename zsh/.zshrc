@@ -1,23 +1,23 @@
-# ~/.zshrc file for zsh interactive shells.
-# see /usr/share/doc/zsh/examples/zshrc for examples
+# ═══════════════════════════════════════════════════════════════════════
+#  ~/.zshrc — Kali OSCP Workstation
+#  Theme: nightgrid.  All previous keybindings are preserved verbatim.
+# ═══════════════════════════════════════════════════════════════════════
 
-setopt autocd              # change directory just by typing its name
-#setopt correct            # auto correct mistakes
-setopt interactivecomments # allow comments in interactive mode
-setopt magicequalsubst     # enable filename expansion for arguments of the form ‘anything=expression’
-setopt nonomatch           # hide error message if there is no match for the pattern
-setopt notify              # report the status of background jobs immediately
-setopt numericglobsort     # sort filenames numerically when it makes sense
-setopt promptsubst         # enable command substitution in prompt
+# ─── Options ───────────────────────────────────────────────────────────
+setopt autocd
+setopt interactivecomments
+setopt magicequalsubst
+setopt nonomatch
+setopt notify
+setopt numericglobsort
+setopt promptsubst
 
-WORDCHARS='_-' # Don't consider certain characters part of the word
-
-# hide EOL sign ('%')
+WORDCHARS='_-'
 PROMPT_EOL_MARK=""
 
-# configure key keybindings
+# ─── Keybindings ───────────────────────────────────────────────────────
 bindkey -e                                        # emacs key bindings
-bindkey ' ' magic-space                           # do history expansion on space
+bindkey ' ' magic-space                           # history expansion on space
 bindkey '^U' backward-kill-line                   # ctrl + U
 bindkey '^[[3;5~' kill-word                       # ctrl + Supr
 bindkey '^[[3~' delete-char                       # delete
@@ -27,157 +27,129 @@ bindkey '^[[5~' beginning-of-buffer-or-history    # page up
 bindkey '^[[6~' end-of-buffer-or-history          # page down
 bindkey '^[[H' beginning-of-line                  # home
 bindkey '^[[F' end-of-line                        # end
-bindkey '^[[Z' undo                               # shift + tab undo last action
+bindkey '^[[Z' undo                               # shift + tab
 
-# enable completion features
+# ─── Completion ────────────────────────────────────────────────────────
 autoload -Uz compinit
 compinit -d ~/.cache/zcompdump
-zstyle ':completion:*:*:*:*:*' menu select
-zstyle ':completion:*' auto-description 'specify: %d'
-zstyle ':completion:*' completer _expand _complete
-zstyle ':completion:*' format 'Completing %d'
-zstyle ':completion:*' group-name ''
-zstyle ':completion:*' list-colors ''
-zstyle ':completion:*' list-prompt %SAt %p: Hit TAB for more, or the character to insert%s
-zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
+
+zstyle ':completion:*' menu select
+zstyle ':completion:*' completer _expand _complete _ignored _approximate
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|=*' 'l:|=* r:|=*'
 zstyle ':completion:*' rehash true
-zstyle ':completion:*' select-prompt %SScrolling active: current selection at %p%s
 zstyle ':completion:*' use-compctl false
 zstyle ':completion:*' verbose true
+zstyle ':completion:*' group-name ''
+zstyle ':completion:*' list-prompt   '%S %p %s'
+zstyle ':completion:*' select-prompt '%S %p %s'
+zstyle ':completion:*:descriptions' format '%F{#166534}󰅂%f %F{#4b5e54}%d%f'
+zstyle ':completion:*:messages'     format '%F{#fbbf24}󰋼%f %F{#4b5e54}%d%f'
+zstyle ':completion:*:warnings'     format '%F{#f87171}󰀦%f %F{#4b5e54}no matches%f'
+zstyle ':completion:*:corrections'  format '%F{#fbbf24}󰁨%f %F{#4b5e54}%d%f'
 zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 
-# History configurations
+# ─── History ───────────────────────────────────────────────────────────
 HISTFILE=~/.zsh_history
-HISTSIZE=1000
-SAVEHIST=2000
-setopt hist_expire_dups_first # delete duplicates first when HISTFILE size exceeds HISTSIZE
-setopt hist_ignore_dups       # ignore duplicated commands history list
-setopt hist_ignore_space      # ignore commands that start with space
-setopt hist_verify            # show command with history expansion to user before running it
-#setopt share_history         # share command history data
+HISTSIZE=100000
+SAVEHIST=100000
 
-# force zsh to show the complete history
+setopt hist_expire_dups_first
+setopt hist_ignore_dups
+setopt hist_ignore_space
+setopt hist_verify
+setopt hist_reduce_blanks
+setopt share_history
+setopt inc_append_history
+
 alias history="history 0"
 
-# configure `time` format
 TIMEFMT=$'\nreal\t%E\nuser\t%U\nsys\t%S\ncpu\t%P'
 
-# make less more friendly for non-text input files, see lesspipe(1)
-#[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
-
-# set variable identifying the chroot you work in (used in the prompt below)
 if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
     debian_chroot=$(cat /etc/debian_chroot)
 fi
 
-# set a fancy prompt (non-color, unless we know we "want" color)
-case "$TERM" in
-    xterm-color|*-256color) color_prompt=yes;;
-esac
+# ═══════════════════════════════════════════════════════════════════════
+#  Prompt — nightgrid
+# ═══════════════════════════════════════════════════════════════════════
 
-# uncomment for a colored prompt, if the terminal has the capability; turned
-# off by default to not distract the user: the focus in a terminal window
-# should be on the output of commands, not on the prompt
-force_color_prompt=yes
+typeset -g NG_BG='#05070a'
+typeset -g NG_GREEN='#22c55e'
+typeset -g NG_GREEN_HI='#4ade80'
+typeset -g NG_GREEN_DIM='#166534'
+typeset -g NG_FG='#d1fae5'
+typeset -g NG_FG_DIM='#86efac'
+typeset -g NG_GRAY='#4b5e54'
+typeset -g NG_RED='#f87171'
+typeset -g NG_YELLOW='#fbbf24'
 
-if [ -n "$force_color_prompt" ]; then
-    if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
-        # We have color support; assume it's compliant with Ecma-48
-        # (ISO/IEC-6429). (Lack of such support is extremely rare, and such
-        # a case would tend to support setf rather than setaf.)
-        color_prompt=yes
-    else
-        color_prompt=
+autoload -Uz vcs_info
+zstyle ':vcs_info:*' enable git
+zstyle ':vcs_info:git:*' check-for-changes true
+zstyle ':vcs_info:git:*' stagedstr   "%F{$NG_GREEN_HI}+%f"
+zstyle ':vcs_info:git:*' unstagedstr "%F{$NG_YELLOW}!%f"
+zstyle ':vcs_info:git:*' formats     "%F{$NG_GREEN_DIM}─[%f%F{$NG_FG_DIM}󰘬 %b%f%u%c%F{$NG_GREEN_DIM}]%f"
+zstyle ':vcs_info:git:*' actionformats "%F{$NG_GREEN_DIM}─[%f%F{$NG_YELLOW}󰘬 %b|%a%f%F{$NG_GREEN_DIM}]%f"
+
+# tun0 address, cached so the prompt never shells out more than once
+# every 10 seconds.
+typeset -g NG_TUN=""
+typeset -g NG_TUN_AT=-99   # negative so the first prompt fetches immediately
+ng_tun_ip() {
+    # $SECONDS is a shell builtin — no module required.
+    if (( SECONDS - NG_TUN_AT >= 10 )); then
+        NG_TUN=$(ip -4 -brief address show tun0 2>/dev/null | awk '{print $3}' | cut -d/ -f1)
+        NG_TUN_AT=$SECONDS
     fi
-fi
+    [[ -n "$NG_TUN" ]] && \
+        print -n "%F{$NG_GREEN_DIM}─[%f%F{$NG_GREEN_HI}󰦝 ${NG_TUN}%f%F{$NG_GREEN_DIM}]%f"
+}
+
+# Current engagement target, if one is set.
+ng_target() {
+    local f="${XDG_CACHE_HOME:-$HOME/.cache}/oscp-target"
+    [[ -s "$f" ]] || return
+    local t="${$(<$f)//[[:space:]]/}"
+    [[ -n "$t" ]] && \
+        print -n "%F{$NG_GREEN_DIM}─[%f%F{$NG_YELLOW} ${t}%f%F{$NG_GREEN_DIM}]%f"
+}
 
 configure_prompt() {
-    prompt_symbol=㉿
-    # Skull emoji for root terminal
-    #[ "$EUID" -eq 0 ] && prompt_symbol=💀
+    local user_colour="%(#.$NG_RED.$NG_GREEN_HI)"
+    local rail="%(#.$NG_RED.$NG_GREEN_DIM)"
+
     case "$PROMPT_ALTERNATIVE" in
         twoline)
-            PROMPT=$'%F{%(#.blue.green)}┌──${debian_chroot:+($debian_chroot)─}${VIRTUAL_ENV:+($(basename $VIRTUAL_ENV))─}(%B%F{%(#.red.blue)}%n'$prompt_symbol$'%m%b%F{%(#.blue.green)})-[%B%F{reset}%(6~.%-1~/…/%4~.%5~)%b%F{%(#.blue.green)}]\n└─%B%(#.%F{red}#.%F{blue}$)%b%F{reset} '
-            # Right-side prompt with exit codes and background processes
-            #RPROMPT=$'%(?.. %? %F{red}%B⨯%b%F{reset})%(1j. %j %F{yellow}%B⚙%b%F{reset}.)'
+            PROMPT='%F{'$rail'}┌─[%f'
+            PROMPT+='%B%F{'$user_colour'}%n%f%F{'$NG_GREEN_DIM'}㉿%f%F{'$NG_FG_DIM'}%m%b%f'
+            PROMPT+='%F{'$rail'}]%f'
+            PROMPT+='%F{'$rail'}─[%f%B%F{'$NG_FG'}%(6~.%-1~/…/%4~.%5~)%b%f%F{'$rail'}]%f'
+            PROMPT+='${vcs_info_msg_0_}$(ng_tun_ip)$(ng_target)'
+            PROMPT+=$'\n%F{'$rail'}└─%f%B%(#.%F{'$NG_RED'}#.%F{'$NG_GREEN'}❯)%b%f '
+            RPROMPT='%(?..%F{'$NG_RED'}󰅗 %?%f)%(1j. %F{'$NG_YELLOW'}󰑮 %j%f.)'
             ;;
         oneline)
-            PROMPT=$'${debian_chroot:+($debian_chroot)}${VIRTUAL_ENV:+($(basename $VIRTUAL_ENV))}%B%F{%(#.red.blue)}%n@%m%b%F{reset}:%B%F{%(#.blue.green)}%~%b%F{reset}%(#.#.$) '
-            RPROMPT=
+            PROMPT='%B%F{'$user_colour'}%n%f%F{'$NG_GREEN_DIM'}@%f%F{'$NG_FG_DIM'}%m%b%f'
+            PROMPT+='%F{'$NG_GREEN_DIM'}:%f%B%F{'$NG_FG'}%~%b%f'
+            PROMPT+='%B%(#.%F{'$NG_RED'} #.%F{'$NG_GREEN'} ❯)%b%f '
+            RPROMPT='%(?..%F{'$NG_RED'}%?%f)'
             ;;
         backtrack)
-            PROMPT=$'${debian_chroot:+($debian_chroot)}${VIRTUAL_ENV:+($(basename $VIRTUAL_ENV))}%B%F{red}%n@%m%b%F{reset}:%B%F{blue}%~%b%F{reset}%(#.#.$) '
+            PROMPT='%B%F{'$NG_RED'}%n@%m%b%f:%B%F{'$NG_FG'}%~%b%f%(#.#.$) '
             RPROMPT=
             ;;
     esac
-    unset prompt_symbol
 }
 
-# The following block is surrounded by two delimiters.
-# These delimiters must not be modified. Thanks.
 # START KALI CONFIG VARIABLES
 PROMPT_ALTERNATIVE=twoline
 NEWLINE_BEFORE_PROMPT=yes
 # STOP KALI CONFIG VARIABLES
 
-if [ "$color_prompt" = yes ]; then
-    # override default virtualenv indicator in prompt
-    VIRTUAL_ENV_DISABLE_PROMPT=1
+VIRTUAL_ENV_DISABLE_PROMPT=1
+configure_prompt
 
-    configure_prompt
-
-    # enable syntax-highlighting
-    if [ -f /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
-        . /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-        ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern)
-        ZSH_HIGHLIGHT_STYLES[default]=none
-        ZSH_HIGHLIGHT_STYLES[unknown-token]=underline
-        ZSH_HIGHLIGHT_STYLES[reserved-word]=fg=cyan,bold
-        ZSH_HIGHLIGHT_STYLES[suffix-alias]=fg=green,underline
-        ZSH_HIGHLIGHT_STYLES[global-alias]=fg=green,bold
-        ZSH_HIGHLIGHT_STYLES[precommand]=fg=green,underline
-        ZSH_HIGHLIGHT_STYLES[commandseparator]=fg=blue,bold
-        ZSH_HIGHLIGHT_STYLES[autodirectory]=fg=green,underline
-        ZSH_HIGHLIGHT_STYLES[path]=bold
-        ZSH_HIGHLIGHT_STYLES[path_pathseparator]=
-        ZSH_HIGHLIGHT_STYLES[path_prefix_pathseparator]=
-        ZSH_HIGHLIGHT_STYLES[globbing]=fg=blue,bold
-        ZSH_HIGHLIGHT_STYLES[history-expansion]=fg=blue,bold
-        ZSH_HIGHLIGHT_STYLES[command-substitution]=none
-        ZSH_HIGHLIGHT_STYLES[command-substitution-delimiter]=fg=magenta,bold
-        ZSH_HIGHLIGHT_STYLES[process-substitution]=none
-        ZSH_HIGHLIGHT_STYLES[process-substitution-delimiter]=fg=magenta,bold
-        ZSH_HIGHLIGHT_STYLES[single-hyphen-option]=fg=green
-        ZSH_HIGHLIGHT_STYLES[double-hyphen-option]=fg=green
-        ZSH_HIGHLIGHT_STYLES[back-quoted-argument]=none
-        ZSH_HIGHLIGHT_STYLES[back-quoted-argument-delimiter]=fg=blue,bold
-        ZSH_HIGHLIGHT_STYLES[single-quoted-argument]=fg=yellow
-        ZSH_HIGHLIGHT_STYLES[double-quoted-argument]=fg=yellow
-        ZSH_HIGHLIGHT_STYLES[dollar-quoted-argument]=fg=yellow
-        ZSH_HIGHLIGHT_STYLES[rc-quote]=fg=magenta
-        ZSH_HIGHLIGHT_STYLES[dollar-double-quoted-argument]=fg=magenta,bold
-        ZSH_HIGHLIGHT_STYLES[back-double-quoted-argument]=fg=magenta,bold
-        ZSH_HIGHLIGHT_STYLES[back-dollar-quoted-argument]=fg=magenta,bold
-        ZSH_HIGHLIGHT_STYLES[assign]=none
-        ZSH_HIGHLIGHT_STYLES[redirection]=fg=blue,bold
-        ZSH_HIGHLIGHT_STYLES[comment]=fg=black,bold
-        ZSH_HIGHLIGHT_STYLES[named-fd]=none
-        ZSH_HIGHLIGHT_STYLES[numeric-fd]=none
-        ZSH_HIGHLIGHT_STYLES[arg0]=fg=cyan
-        ZSH_HIGHLIGHT_STYLES[bracket-error]=fg=red,bold
-        ZSH_HIGHLIGHT_STYLES[bracket-level-1]=fg=blue,bold
-        ZSH_HIGHLIGHT_STYLES[bracket-level-2]=fg=green,bold
-        ZSH_HIGHLIGHT_STYLES[bracket-level-3]=fg=magenta,bold
-        ZSH_HIGHLIGHT_STYLES[bracket-level-4]=fg=yellow,bold
-        ZSH_HIGHLIGHT_STYLES[bracket-level-5]=fg=cyan,bold
-        ZSH_HIGHLIGHT_STYLES[cursor-matchingbracket]=standout
-    fi
-else
-    PROMPT='${debian_chroot:+($debian_chroot)}%n@%m:%~%(#.#.$) '
-fi
-unset color_prompt force_color_prompt
-
-toggle_oneline_prompt(){
+toggle_oneline_prompt() {
     if [ "$PROMPT_ALTERNATIVE" = oneline ]; then
         PROMPT_ALTERNATIVE=twoline
     else
@@ -189,20 +161,18 @@ toggle_oneline_prompt(){
 zle -N toggle_oneline_prompt
 bindkey ^P toggle_oneline_prompt
 
-# If this is an xterm set the title to user@host:dir
 case "$TERM" in
-xterm*|rxvt*|Eterm|aterm|kterm|gnome*|alacritty)
+xterm*|rxvt*|Eterm|aterm|kterm|gnome*|alacritty|xterm-kitty)
     TERM_TITLE=$'\e]0;${debian_chroot:+($debian_chroot)}${VIRTUAL_ENV:+($(basename $VIRTUAL_ENV))}%n@%m: %~\a'
     ;;
 *)
+    TERM_TITLE=''
     ;;
 esac
 
 precmd() {
-    # Print the previously configured title
+    vcs_info
     print -Pnr -- "$TERM_TITLE"
-
-    # Print a new line before the prompt, but only if it is not the first line
     if [ "$NEWLINE_BEFORE_PROMPT" = yes ]; then
         if [ -z "$_NEW_LINE_BEFORE_PROMPT" ]; then
             _NEW_LINE_BEFORE_PROMPT=1
@@ -212,105 +182,165 @@ precmd() {
     fi
 }
 
-# enable color support of ls, less and man, and also add handy aliases
+# ═══════════════════════════════════════════════════════════════════════
+#  Colours
+# ═══════════════════════════════════════════════════════════════════════
+
 if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
-    export LS_COLORS="$LS_COLORS:ow=30;44:" # fix ls color for folders with 777 permissions
-
-    alias ls='ls --color=auto'
-    #alias dir='dir --color=auto'
-    #alias vdir='vdir --color=auto'
-
-    alias grep='grep --color=auto'
-    alias fgrep='fgrep --color=auto'
-    alias egrep='egrep --color=auto'
-    alias diff='diff --color=auto'
-    alias ip='ip --color=auto'
-
-    export LESS_TERMCAP_mb=$'\E[1;31m'     # begin blink
-    export LESS_TERMCAP_md=$'\E[1;36m'     # begin bold
-    export LESS_TERMCAP_me=$'\E[0m'        # reset bold/blink
-    export LESS_TERMCAP_so=$'\E[01;33m'    # begin reverse video
-    export LESS_TERMCAP_se=$'\E[0m'        # reset reverse video
-    export LESS_TERMCAP_us=$'\E[1;32m'     # begin underline
-    export LESS_TERMCAP_ue=$'\E[0m'        # reset underline
-    export MANROFFOPT="-c"
-
-    # Take advantage of $LS_COLORS for completion as well
+    export LS_COLORS="$LS_COLORS:ow=30;42:di=1;32:ln=1;36:ex=1;92"
     zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
     zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
 fi
 
-# some more ls aliases
-alias ll='ls -l'
-alias la='ls -A'
+export LESS_TERMCAP_mb=$'\E[1;32m'
+export LESS_TERMCAP_md=$'\E[1;92m'
+export LESS_TERMCAP_me=$'\E[0m'
+export LESS_TERMCAP_so=$'\E[01;30;42m'
+export LESS_TERMCAP_se=$'\E[0m'
+export LESS_TERMCAP_us=$'\E[1;36m'
+export LESS_TERMCAP_ue=$'\E[0m'
+export MANROFFOPT="-c"
+export LESS="-R"
+
+# batcat follows the terminal palette instead of shipping its own.
+export BAT_THEME="ansi"
+export BAT_STYLE="numbers,changes"
+
+# ═══════════════════════════════════════════════════════════════════════
+#  Plugins
+# ═══════════════════════════════════════════════════════════════════════
+
+[[ -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]] && \
+    source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#4b5e54'
+
+if [[ -f /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
+    source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+    ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern)
+    ZSH_HIGHLIGHT_STYLES[default]=none
+    ZSH_HIGHLIGHT_STYLES[unknown-token]='fg=#f87171,bold'
+    ZSH_HIGHLIGHT_STYLES[reserved-word]='fg=#34d399,bold'
+    ZSH_HIGHLIGHT_STYLES[alias]='fg=#4ade80'
+    ZSH_HIGHLIGHT_STYLES[suffix-alias]='fg=#4ade80,underline'
+    ZSH_HIGHLIGHT_STYLES[global-alias]='fg=#4ade80,bold'
+    ZSH_HIGHLIGHT_STYLES[builtin]='fg=#22c55e'
+    ZSH_HIGHLIGHT_STYLES[function]='fg=#22c55e,bold'
+    ZSH_HIGHLIGHT_STYLES[command]='fg=#22c55e'
+    ZSH_HIGHLIGHT_STYLES[precommand]='fg=#22c55e,underline'
+    ZSH_HIGHLIGHT_STYLES[commandseparator]='fg=#166534,bold'
+    ZSH_HIGHLIGHT_STYLES[autodirectory]='fg=#4ade80,underline'
+    ZSH_HIGHLIGHT_STYLES[path]='fg=#d1fae5'
+    ZSH_HIGHLIGHT_STYLES[path_pathseparator]='fg=#4b5e54'
+    ZSH_HIGHLIGHT_STYLES[globbing]='fg=#60a5fa'
+    ZSH_HIGHLIGHT_STYLES[history-expansion]='fg=#60a5fa,bold'
+    ZSH_HIGHLIGHT_STYLES[single-hyphen-option]='fg=#86efac'
+    ZSH_HIGHLIGHT_STYLES[double-hyphen-option]='fg=#86efac'
+    ZSH_HIGHLIGHT_STYLES[single-quoted-argument]='fg=#fbbf24'
+    ZSH_HIGHLIGHT_STYLES[double-quoted-argument]='fg=#fbbf24'
+    ZSH_HIGHLIGHT_STYLES[dollar-quoted-argument]='fg=#fbbf24'
+    ZSH_HIGHLIGHT_STYLES[dollar-double-quoted-argument]='fg=#c4b5fd'
+    ZSH_HIGHLIGHT_STYLES[back-quoted-argument]='fg=#c4b5fd'
+    ZSH_HIGHLIGHT_STYLES[command-substitution-delimiter]='fg=#c4b5fd,bold'
+    ZSH_HIGHLIGHT_STYLES[redirection]='fg=#60a5fa,bold'
+    ZSH_HIGHLIGHT_STYLES[comment]='fg=#4b5e54'
+    ZSH_HIGHLIGHT_STYLES[bracket-error]='fg=#f87171,bold'
+    ZSH_HIGHLIGHT_STYLES[bracket-level-1]='fg=#22c55e,bold'
+    ZSH_HIGHLIGHT_STYLES[bracket-level-2]='fg=#34d399,bold'
+    ZSH_HIGHLIGHT_STYLES[bracket-level-3]='fg=#60a5fa,bold'
+    ZSH_HIGHLIGHT_STYLES[bracket-level-4]='fg=#fbbf24,bold'
+    ZSH_HIGHLIGHT_STYLES[bracket-level-5]='fg=#c4b5fd,bold'
+    ZSH_HIGHLIGHT_STYLES[cursor-matchingbracket]=standout
+fi
+
+[[ -f /etc/zsh_command_not_found ]] && source /etc/zsh_command_not_found
+
+# ═══════════════════════════════════════════════════════════════════════
+#  fzf — Ctrl+R unchanged, nightgrid colours
+# ═══════════════════════════════════════════════════════════════════════
+
+export FZF_DEFAULT_OPTS="
+  --height 45% --layout=reverse --border=rounded --info=inline
+  --prompt='  ' --pointer='▌' --marker='󰄲 '
+  --color=bg+:#0d1410,bg:-1,spinner:#22c55e,hl:#4ade80
+  --color=fg:#86efac,header:#166534,info:#4b5e54,pointer:#22c55e
+  --color=marker:#fbbf24,fg+:#d1fae5,prompt:#22c55e,hl+:#4ade80
+  --color=border:#166534
+"
+
+[[ -f /usr/share/doc/fzf/examples/key-bindings.zsh ]] && \
+    source /usr/share/doc/fzf/examples/key-bindings.zsh
+[[ -f /usr/share/doc/fzf/examples/completion.zsh ]] && \
+    source /usr/share/doc/fzf/examples/completion.zsh
+
+# ─── zoxide ────────────────────────────────────────────────────────────
+command -v zoxide >/dev/null && eval "$(zoxide init zsh)"
+
+# ═══════════════════════════════════════════════════════════════════════
+#  Aliases
+# ═══════════════════════════════════════════════════════════════════════
+
+if command -v eza >/dev/null; then
+    alias ls='eza --icons --group-directories-first'
+    alias ll='eza -lah --icons --group-directories-first --git'
+    alias la='eza -a --icons --group-directories-first'
+    alias tree='eza --tree --icons --level=2'
+else
+    alias ls='ls --color=auto'
+    alias ll='ls -lah --color=auto'
+    alias la='ls -A --color=auto'
+fi
+
 alias l='ls -CF'
-
-# enable auto-suggestions based on the history
-if [ -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
-    . /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-    # change suggestion color
-    ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=244'
-fi
-
-# enable command-not-found if installed
-if [ -f /etc/zsh_command_not_found ]; then
-    . /etc/zsh_command_not_found
-fi
-
-
-#########################
-# Plugins
-#########################
-
-source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-
-#########################
-# History
-#########################
-
-HISTSIZE=100000
-SAVEHIST=100000
-HISTFILE=~/.zsh_history
-
-setopt HIST_IGNORE_DUPS
-setopt SHARE_HISTORY
-setopt INC_APPEND_HISTORY
-
-#########################
-# FZF
-#########################
-
-source /usr/share/doc/fzf/examples/key-bindings.zsh
-source /usr/share/doc/fzf/examples/completion.zsh
-
-#########################
-# Zoxide
-#########################
-
-eval "$(zoxide init zsh)"
-
-############################
-# Aliases
-############################
-
-alias ls='eza --icons'
-alias ll='eza -lah --icons'
-alias la='eza -a --icons'
-alias tree='eza --tree --icons'
-alias cls='clear'
-
 alias cat='batcat --paging=never'
-
 alias grep='grep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'
+alias diff='diff --color=auto'
+alias ip='ip --color=auto'
 
+alias cls='clear'
+alias c='clear'
 
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
 
-############################
-# Auto-start tmux
-############################
+# ─── Engagement helpers ────────────────────────────────────────────────
+alias tun='ip -4 -brief address show tun0'
+alias myip='ip -4 -brief address show | grep -v " lo "'
+alias ports='ss -tulpn'
+alias serve='python3 -m http.server 80'
 
-if command -v tmux >/dev/null && [ -z "$TMUX" ]; then
+# target            → print the current target
+# target 10.10.11.5 → set it, export $T, refresh the i3 bar
+target() {
+    local f="${XDG_CACHE_HOME:-$HOME/.cache}/oscp-target"
+    if [[ -z "$1" ]]; then
+        [[ -s "$f" ]] && cat "$f" || echo "no target set"
+        return
+    fi
+    mkdir -p "${f:h}"
+    print -r -- "$1" > "$f"
+    export T="$1"
+    pkill -RTMIN+11 i3blocks 2>/dev/null
+    print -P "%F{#22c55e}%f target set to %F{#fbbf24}$1%f  (\$T)"
+}
+[[ -s "${XDG_CACHE_HOME:-$HOME/.cache}/oscp-target" ]] && \
+    export T="$(<${XDG_CACHE_HOME:-$HOME/.cache}/oscp-target)"
+
+# mkt box → scaffold ~/engagements/box/{nmap,web,loot,exploits,notes.md}
+mkt() {
+    local root="$HOME/engagements/${1:?usage: mkt <name>}"
+    mkdir -p "$root"/{nmap,web,loot,exploits}
+    [[ -f "$root/notes.md" ]] || printf '# %s\n\n## Enumeration\n\n## Foothold\n\n## Privilege escalation\n\n' "$1" > "$root/notes.md"
+    cd "$root"
+}
+
+# ═══════════════════════════════════════════════════════════════════════
+#  tmux — attach to the persistent session
+# ═══════════════════════════════════════════════════════════════════════
+
+if command -v tmux >/dev/null && [[ -z "$TMUX" ]] && [[ -n "$PS1" ]]; then
     tmux attach-session -t main 2>/dev/null || tmux new-session -s main
 fi

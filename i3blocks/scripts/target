@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# Current engagement target. Empty output hides the block entirely.
+set -uo pipefail
+
+file="${XDG_CACHE_HOME:-$HOME/.cache}/oscp-target"
+[[ -s "$file" ]] || exit 0
+
+target=$(head -n1 "$file" | tr -d '[:space:]')
+[[ -n "$target" ]] || exit 0
+
+printf '<span foreground="#166534"></span> <span foreground="#fbbf24"><b>%s</b></span>\n' "$target"

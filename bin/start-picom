@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+# Start picom once, falling back to the xrender backend when the VM has no
+# 3D acceleration. Safe to run repeatedly — i3 calls it on every reload.
+set -uo pipefail
+
+command -v picom >/dev/null 2>&1 || exit 0
+pgrep -x picom >/dev/null 2>&1 && exit 0
+
+# Exam mode is sticky across restarts.
+[[ -f "${XDG_CACHE_HOME:-$HOME/.cache}/nightgrid-effects-off" ]] && exit 0
+
+config="$HOME/.config/picom/picom.conf"
+
+picom --config "$config" --daemon 2>/dev/null && exit 0
+picom --config "$config" --backend xrender --daemon 2>/dev/null && exit 0
+
+notify-send "picom" "Compositor unavailable — running without effects" 2>/dev/null
+exit 0

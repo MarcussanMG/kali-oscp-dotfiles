@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+# Exam mode. Kills the compositor and makes every kitty window fully
+# opaque, then puts it all back. Bound to Super+Shift+P.
+set -uo pipefail
+
+flag="${XDG_CACHE_HOME:-$HOME/.cache}/nightgrid-effects-off"
+mkdir -p "$(dirname "$flag")"
+
+kitty_opacity() {
+    command -v kitty >/dev/null 2>&1 || return 0
+    kitty @ --to unix:@kitty set-background-opacity "$1" 2>/dev/null || true
+}
+
+if pgrep -x picom >/dev/null 2>&1; then
+    pkill -x picom
+    touch "$flag"
+    kitty_opacity 1.0
+    notify-send -u low "nightgrid" "Exam mode on — effects disabled" 2>/dev/null
+else
+    rm -f "$flag"
+    "$HOME/.local/bin/start-picom"
+    kitty_opacity 0.95
+    notify-send -u low "nightgrid" "Effects enabled" 2>/dev/null
+fi
