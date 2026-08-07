@@ -59,7 +59,7 @@ the launcher and the window manager all agree with each other.
 Clone the repository:
 
 ```bash
-git clone <REPOSITORY_URL> ~/.dotfiles
+git clone https://github.com/MarcussanMG/kali-oscp-dotfiles.git ~/.dotfiles
 cd ~/.dotfiles
 ```
 
