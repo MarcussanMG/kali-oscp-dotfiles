@@ -87,7 +87,7 @@ if [[ -n "${DISPLAY:-}" && -f "$WALLPAPER" ]] && command -v feh >/dev/null; then
 fi
 
 if [[ -n "$MAGICK" && -n "${DISPLAY:-}" && -f "$WALLPAPER" ]] && command -v xdpyinfo >/dev/null; then
-    RESOLUTION="$(xdpyinfo | awk '/dimensions/{print $2; exit}')"
+    RESOLUTION="$(xdpyinfo 2>/dev/null | awk '/dimensions/{print $2; exit}' || true)"
     mkdir -p "$(dirname "$LOCK_IMAGE")"
     "$MAGICK" "$WALLPAPER" \
         -resize "${RESOLUTION}^" -gravity center -extent "$RESOLUTION" \

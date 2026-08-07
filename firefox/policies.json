@@ -1,7 +1,7 @@
 {
   "policies": {
     "ExtensionSettings": {
-      "foxyproxy-standard@eric.h.jung": {
+      "foxyproxy@eric.h.jung": {
         "install_url": "https://addons.mozilla.org/firefox/downloads/latest/foxyproxy-standard/latest.xpi",
         "installation_mode": "normal_installed"
       },
