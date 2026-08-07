@@ -340,7 +340,8 @@ mkt() {
 # ═══════════════════════════════════════════════════════════════════════
 #  tmux — attach to the persistent session
 # ═══════════════════════════════════════════════════════════════════════
-
+#  tmux — attach to the persistent session, or spin up an independent one
+#  if "main" is already in use by another window
 if command -v tmux >/dev/null && [[ -z "$TMUX" ]] && [[ -n "$PS1" ]]; then
     if tmux has-session -t main 2>/dev/null; then
         if [[ -z "$(tmux list-clients -t main 2>/dev/null)" ]]; then
