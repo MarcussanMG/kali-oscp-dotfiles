@@ -170,9 +170,11 @@ xterm*|rxvt*|Eterm|aterm|kterm|gnome*|alacritty|xterm-kitty)
     ;;
 esac
 
+typeset -g NG_TAB_LOCKED=0
+
 precmd() {
     vcs_info
-    print -Pnr -- "$TERM_TITLE"
+    (( NG_TAB_LOCKED )) || print -Pnr -- "$TERM_TITLE"
     if [ "$NEWLINE_BEFORE_PROMPT" = yes ]; then
         if [ -z "$_NEW_LINE_BEFORE_PROMPT" ]; then
             _NEW_LINE_BEFORE_PROMPT=1
@@ -353,3 +355,54 @@ if command -v tmux >/dev/null && [[ -z "$TMUX" ]] && [[ -n "$PS1" ]]; then
         tmux new-session -s main
     fi
 fi
+
+# tabname Nmap → renombra la pestaña y evita que el prompt lo sobreescriba
+# tabname (sin argumento) → vuelve al título automático
+tabname() {
+    if [[ -z "$1" ]]; then
+        NG_TAB_LOCKED=0
+        return
+    fi
+    print -n "\e]0;${1}\a"
+    NG_TAB_LOCKED=1
+}
+
+# cleartarget → clears the current target and refreshes i3blocks
+cleartarget() {
+    local f="${XDG_CACHE_HOME:-$HOME/.cache}/oscp-target"
+    rm -f "$f"
+    unset T
+    pkill -RTMIN+11 i3blocks 2>/dev/null
+    print -P "%F{#f87171}%f target cleared"
+}
+
+# extractports <file.gnmap|.oG> → pulls open ports and copies them to clipboard
+extractports() {
+    local f="${1:?usage: extractports <file.gnmap|.oG>}"
+    [[ -f "$f" ]] || { print -P "%F{#f87171}%f file not found: $f"; return 1 }
+
+    local ports
+    ports=$(grep -oP '(?<=Ports: ).*?(?=\tIgnored|$)' "$f" \
+        | tr ',' '\n' \
+        | awk -F'/' '{gsub(/^[ \t]+|[ \t]+$/,"",$1); if ($2=="open") print $1}' \
+        | sort -n -u \
+        | paste -sd, -)
+
+    if [[ -z "$ports" ]]; then
+        print -P "%F{#f87171}%f no open ports found in $f"
+        return 1
+    fi
+
+    print -P "%F{#22c55e}[+] Open Ports:%f"
+    print -r -- "      $ports"
+
+    if command -v xclip >/dev/null; then
+        print -rn -- "$ports" | xclip -selection clipboard
+        print -P "%F{#4b5e54}(copied to clipboard)%f"
+    elif command -v xsel >/dev/null; then
+        print -rn -- "$ports" | xsel --clipboard --input
+        print -P "%F{#4b5e54}(copied to clipboard)%f"
+    else
+        print -P "%F{#fbbf24}xclip/xsel not installed, nothing was copied%f"
+    fi
+}
