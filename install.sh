@@ -86,6 +86,13 @@ if [[ -n "${DISPLAY:-}" && -f "$WALLPAPER" ]] && command -v feh >/dev/null; then
     ok "wallpaper       applied"
 fi
 
+# Reload tmux config for any already-running server, so window/status
+# styling doesn't stay stuck on whatever config was active when the
+# session was first created.
+if command -v tmux >/dev/null && tmux info &>/dev/null; then
+    tmux source-file "$DOTFILES/tmux/tmux.conf" 2>/dev/null && ok "tmux            reloaded"
+fi
+
 if [[ -n "$MAGICK" && -n "${DISPLAY:-}" && -f "$WALLPAPER" ]] && command -v xdpyinfo >/dev/null; then
     RESOLUTION="$(xdpyinfo 2>/dev/null | awk '/dimensions/{print $2; exit}' || true)"
     mkdir -p "$(dirname "$LOCK_IMAGE")"
