@@ -10,6 +10,11 @@
 
 ---
 
+<img width="2048" height="856" alt="Kali-i3-workflow" src="https://github.com/user-attachments/assets/07b58550-7786-4954-9d37-3685a029b168" />
+
+---
+
+
 ## What this is
 
 A keyboard-driven Kali setup built around a single idea: nothing on screen should cost
