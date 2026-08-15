@@ -25,7 +25,7 @@ PACKAGES=(
     # ── Shell tooling ──
     bat eza fd-find ripgrep fzf zoxide btop
     # ── X utilities ──
-    x11-utils xclip maim imagemagick
+    x11-utils xclip maim imagemagick xss-lock libnss3-tools
     # ── Fonts and icons ──
     fonts-font-awesome papirus-icon-theme
     # ── Offensive tooling ──

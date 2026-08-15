@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 set -uo pipefail
 
+out=$(date '+%a %d %b|%H:%M')
+IFS='|' read -r day hm <<< "$out"
 printf '<span foreground="#166534"></span> <span foreground="#d1fae5">%s</span>  <span foreground="#22c55e"><b>%s</b></span>\n' \
-    "$(date '+%a %d %b')" "$(date '+%H:%M')"
+    "$day" "$hm"

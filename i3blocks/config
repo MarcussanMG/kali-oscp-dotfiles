@@ -33,4 +33,4 @@ interval=once
 signal=10
 
 [clock]
-interval=1
+interval=30

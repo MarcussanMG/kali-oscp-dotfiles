@@ -40,6 +40,21 @@ INI="$HOME/.mozilla/firefox/profiles.ini"
 PROFILE_REL="$(awk -F= '/^\[Install/{f=1} f&&/^Default=/{print $2; exit}' "$INI")"
 PROFILE_DIR="$HOME/.mozilla/firefox/${PROFILE_REL:-}"
 [[ -d "$PROFILE_DIR" ]] || PROFILE_DIR=""
+
+# Fallback for profiles.ini files with no [Install...] section (older Firefox,
+# or a profile never launched through the installed binary): read Default=1
+# from the [ProfileN] blocks instead.
+if [[ -z "$PROFILE_DIR" ]]; then
+    PROFILE_REL="$(awk -F= '
+        /^\[Profile/{sec=1; def=0; p=""}
+        sec && /^Path=/{p=$2}
+        sec && /^Default=1/{def=1}
+        sec && /^\[/ && !/^\[Profile/{sec=0}
+        def && p {print p; exit}
+    ' "$INI")"
+    PROFILE_DIR="$HOME/.mozilla/firefox/${PROFILE_REL:-}"
+    [[ -d "$PROFILE_DIR" ]] || PROFILE_DIR=""
+fi
 if [[ -n "$PROFILE_DIR" ]] && command -v certutil >/dev/null; then
     certutil -A -n "PortSwigger CA" -t "C,," -i "$CERT_FILE" -d "sql:$PROFILE_DIR"
     ok "trusted in Firefox  $PROFILE_DIR"
