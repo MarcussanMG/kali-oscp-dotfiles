@@ -406,3 +406,10 @@ extractports() {
         print -P "%F{#fbbf24}xclip/xsel not installed, nothing was copied%f"
     fi
 }
+
+# Hashcat CPU backend for VMware
+export RUSTICL_ENABLE=llvmpipe
+
+hashcat() {
+    command /usr/bin/hashcat -D 1 "$@"
+}
