@@ -533,6 +533,19 @@ ping -c1 $T            # use it
 
 `Super + Shift + T` does the same thing through a Rofi prompt.
 
+### Network variables
+
+Two more live variables, refreshed automatically at most once every 10 seconds so they
+never add shell latency:
+
+```bash
+echo $V     # tun0 address, empty if the VPN is down
+echo $E     # address of the first physical interface (matches the i3 bar)
+```
+
+Unlike `$T`, these update on their own as the VPN connects or drops — no need to open a
+new shell.
+
 ### Scaffolding a box
 
 ```bash

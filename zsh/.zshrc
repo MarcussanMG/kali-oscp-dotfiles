@@ -114,6 +114,27 @@ ng_target() {
         print -n "%F{$NG_GREEN_DIM}─[%f%F{$NG_YELLOW} ${t}%f%F{$NG_GREEN_DIM}]%f"
 }
 
+# tun0 and physical-interface addresses, exposed as plain variables ($V, $E)
+# the same way $T holds the current target. Refreshed at most once every
+# 10 seconds, in precmd, so no shell subprocess runs on every keystroke.
+typeset -g NG_ETH=""
+typeset -g NG_ETH_AT=-99
+ng_refresh_net_vars() {
+    if (( SECONDS - NG_TUN_AT >= 10 )); then
+        NG_TUN=$(ip -4 -brief address show tun0 2>/dev/null | awk '{print $3}' | cut -d/ -f1)
+        NG_TUN_AT=$SECONDS
+    fi
+    export V="$NG_TUN"
+
+    if (( SECONDS - NG_ETH_AT >= 10 )); then
+        NG_ETH=$(ip -4 -brief address show up 2>/dev/null \
+            | awk '$1 !~ /^(lo|tun|docker|br-|veth)/ && $3 != "" {print $3; exit}' \
+            | cut -d/ -f1)
+        NG_ETH_AT=$SECONDS
+    fi
+    export E="$NG_ETH"
+}
+
 configure_prompt() {
     local user_colour="%(#.$NG_RED.$NG_GREEN_HI)"
     local rail="%(#.$NG_RED.$NG_GREEN_DIM)"
@@ -174,6 +195,7 @@ typeset -g NG_TAB_LOCKED=0
 
 precmd() {
     vcs_info
+    ng_refresh_net_vars
     (( NG_TAB_LOCKED )) || print -Pnr -- "$TERM_TITLE"
     if [ "$NEWLINE_BEFORE_PROMPT" = yes ]; then
         if [ -z "$_NEW_LINE_BEFORE_PROMPT" ]; then
